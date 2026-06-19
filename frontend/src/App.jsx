@@ -22,9 +22,9 @@ function AppLayout() {
   return (
     <div className="app-shell lg:flex">
       <Sidebar />
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 overflow-hidden">
         <Navbar />
-        <main className="page-content">
+        <main className="page-content overflow-x-auto">
           <Outlet />
         </main>
       </div>

@@ -33,7 +33,7 @@ export default function TrafficAnalytics() {
       <section className="grid gap-4 xl:grid-cols-2">
         <div className="panel p-5">
           <h3 className="text-lg font-semibold text-white">Protocol Distribution</h3>
-          <div className="mt-4 h-72">
+          <div className="mt-4 h-72 overflow-hidden">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={250} debounce={100}>
               <PieChart>
                 <Pie data={protocolData} dataKey="count" nameKey="protocol" outerRadius={96}>
@@ -56,7 +56,7 @@ function ChartPanel({ title, data, dataKey, tooltipStyle }) {
   return (
     <div className="panel p-5">
       <h3 className="text-lg font-semibold text-white">{title}</h3>
-      <div className="mt-4 h-72">
+      <div className="mt-4 h-72 overflow-hidden">
         <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={250} debounce={100}>
           <BarChart data={data}>
             <CartesianGrid stroke="rgb(var(--border-ui))" vertical={false} />

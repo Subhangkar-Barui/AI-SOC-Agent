@@ -135,6 +135,12 @@ button {
     transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
   }
 
+  /* Ensure recharts chart wrapper containers resolve valid dimensions in flex/grid */
+  .panel .recharts-responsive-container {
+    min-width: 0 !important;
+    min-height: 200px;
+  }
+
   .panel:hover {
     border-color: rgb(var(--signal-cyan) / 0.36);
     box-shadow: var(--shadow-raised);

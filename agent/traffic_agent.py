@@ -4,7 +4,7 @@ import platform
 import socket
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 import psutil
 from scapy.all import ARP, ICMP, IP, TCP, UDP, conf, sniff
@@ -16,7 +16,7 @@ from discovery import discover_visible_devices
 
 
 def now_timestamp() -> str:
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def choose_interface() -> str | None:
@@ -148,8 +148,38 @@ def main() -> None:
         except Exception as exc:
             print(f"Traffic send failed: {exc}")
 
+    # Use Layer 3 sockets if WinPcap/Npcap is not installed
+    sniff_kwargs = {"iface": interface_name, "prn": handle_packet, "store": False}
     try:
-        sniff(iface=interface_name, prn=handle_packet, store=False)
+        # Test if L2 sniffing works
+        from scapy.arch import WINDOWS
+        if WINDOWS:
+            try:
+                from scapy.arch.windows import _check  # noqa: F401
+            except (ImportError, RuntimeError):
+                pass
+            # Check if npcap/winpcap is available by testing conf.use_pcap
+            if not getattr(conf, 'use_pcap', False):
+                print("[INFO] WinPcap/Npcap not found. Using Layer 3 socket (IP-level capture).")
+                print("[INFO] For full Layer 2 capture, install Npcap from https://npcap.com/")
+                sniff_kwargs["opened_socket"] = conf.L3socket(iface=interface_name)
+    except (ImportError, AttributeError):
+        pass
+
+    try:
+        sniff(**sniff_kwargs)
+    except RuntimeError as exc:
+        if "winpcap" in str(exc).lower() or "npcap" in str(exc).lower() or "layer 2" in str(exc).lower():
+            print("[INFO] Layer 2 unavailable. Falling back to Layer 3 socket...")
+            print("[INFO] For full capture, install Npcap from https://npcap.com/")
+            sniff_kwargs.pop("opened_socket", None)
+            sniff_kwargs["opened_socket"] = conf.L3socket(iface=interface_name)
+            try:
+                sniff(**sniff_kwargs)
+            except KeyboardInterrupt:
+                print("\nStopping monitor...")
+        else:
+            raise
     except KeyboardInterrupt:
         print("\nStopping monitor...")
     finally:

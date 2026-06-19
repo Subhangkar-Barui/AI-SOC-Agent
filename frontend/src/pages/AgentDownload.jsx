@@ -4,7 +4,7 @@ import api from "../api/axios";
 import AgentCard from "../components/AgentCard";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
-const releaseUrl = import.meta.env.VITE_AGENT_DOWNLOAD_URL || "https://github.com/your-username/ai-soc-dashboard/releases";
+const releaseUrl = import.meta.env.VITE_AGENT_DOWNLOAD_URL || "https://github.com/Subhangkar-Barui/AI-SOC-Agent/blob/master/agent/build_agent.bat";
 
 export default function AgentDownload() {
   const [pairing, setPairing] = useState(null);

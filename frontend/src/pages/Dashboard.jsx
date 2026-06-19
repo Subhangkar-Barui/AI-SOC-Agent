@@ -90,7 +90,7 @@ export default function Dashboard() {
       <section className="grid gap-4 xl:grid-cols-2">
         <div className="panel p-5">
           <h3 className="text-lg font-semibold text-white">Severity Distribution</h3>
-          <div className="mt-4 h-72">
+          <div className="mt-4 h-72 overflow-hidden">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={250} debounce={100}>
               <PieChart>
                 <Pie data={severityData} dataKey="value" nameKey="name" innerRadius={62} outerRadius={96} paddingAngle={4}>
@@ -107,7 +107,7 @@ export default function Dashboard() {
 
         <div className="panel p-5">
           <h3 className="text-lg font-semibold text-white">Alert Status</h3>
-          <div className="mt-4 h-72">
+          <div className="mt-4 h-72 overflow-hidden">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={250} debounce={100}>
               <BarChart data={statusData}>
                 <XAxis dataKey="name" stroke="rgb(var(--text-muted))" />
@@ -127,7 +127,7 @@ export default function Dashboard() {
       <section className="grid gap-4 xl:grid-cols-2">
         <div className="panel p-5">
           <h3 className="text-lg font-semibold text-white">Protocol Distribution</h3>
-          <div className="mt-4 h-72">
+          <div className="mt-4 h-72 overflow-hidden">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={250} debounce={100}>
               <PieChart>
                 <Pie data={trafficStats.protocol_distribution || []} dataKey="count" nameKey="protocol" outerRadius={94}>
@@ -144,7 +144,7 @@ export default function Dashboard() {
 
         <div className="panel p-5">
           <h3 className="text-lg font-semibold text-white">Top Destination Ports</h3>
-          <div className="mt-4 h-72">
+          <div className="mt-4 h-72 overflow-hidden">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={250} debounce={100}>
               <BarChart data={trafficStats.top_ports || []}>
                 <CartesianGrid stroke="rgb(var(--border-ui))" vertical={false} />
