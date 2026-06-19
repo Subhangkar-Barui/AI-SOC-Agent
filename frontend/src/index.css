@@ -1,0 +1,350 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --signal-cyan: 38 207 190;
+  --signal-lime: 127 207 78;
+  --signal-amber: 245 165 36;
+  --signal-red: 239 68 68;
+  --on-accent: 7 16 16;
+}
+
+:root,
+:root.dark {
+  color-scheme: dark;
+  --surface-950: 7 16 16;
+  --surface-900: 13 25 24;
+  --surface-850: 18 34 32;
+  --surface-800: 25 45 43;
+  --text-strong: 248 250 252;
+  --text-base: 220 232 232;
+  --text-muted: 149 164 183;
+  --border-ui: 47 79 75;
+  --grid-line: 38 207 190;
+  --shadow-glow: 0 0 0 1px rgba(38, 207, 190, 0.16), 0 18px 55px rgba(0, 0, 0, 0.34);
+  --shadow-raised: 0 16px 44px rgba(0, 0, 0, 0.28);
+}
+
+:root.light {
+  color-scheme: light;
+  --surface-950: 247 251 250;
+  --surface-900: 255 255 255;
+  --surface-850: 238 247 245;
+  --surface-800: 224 238 235;
+  --text-strong: 15 23 42;
+  --text-base: 30 41 59;
+  --text-muted: 87 104 124;
+  --border-ui: 199 219 215;
+  --grid-line: 23 121 111;
+  --shadow-glow: 0 0 0 1px rgba(23, 121, 111, 0.16), 0 18px 46px rgba(15, 23, 42, 0.1);
+  --shadow-raised: 0 14px 38px rgba(15, 23, 42, 0.12);
+}
+
+html {
+  min-width: 320px;
+  background: rgb(var(--surface-950));
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: rgb(var(--text-base));
+  background:
+    linear-gradient(rgb(var(--grid-line) / 0.052) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--grid-line) / 0.052) 1px, transparent 1px),
+    radial-gradient(circle at 18% 10%, rgb(var(--signal-cyan) / 0.12), transparent 26rem),
+    rgb(var(--surface-950));
+  background-size: 36px 36px, 36px 36px, auto, auto;
+  transition: background-color 220ms ease, color 220ms ease;
+  animation: grid-flow 36s linear infinite;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes grid-flow {
+  0% {
+    background-position: 0 0, 0 0, 0 0, 0 0;
+  }
+  100% {
+    background-position: 36px 36px, 36px 36px, 0 0, 0 0;
+  }
+}
+
+@keyframes flow-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes brand-sweep {
+  from {
+    transform: translateX(-130%) rotate(18deg);
+  }
+  to {
+    transform: translateX(150%) rotate(18deg);
+  }
+}
+
+@keyframes pulse-ring {
+  0%, 100% {
+    opacity: 0.42;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(1.08);
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply min-h-screen;
+    color: rgb(var(--text-base));
+  }
+
+  .page-content {
+    @apply px-4 py-5 sm:px-6 lg:px-8;
+  }
+
+  .panel {
+    @apply rounded-lg border shadow-glow;
+    border-color: rgb(var(--border-ui));
+    background-color: rgb(var(--surface-900) / 0.93);
+    animation: flow-in 460ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  }
+
+  .panel:hover {
+    border-color: rgb(var(--signal-cyan) / 0.36);
+    box-shadow: var(--shadow-raised);
+    transform: translateY(-1px);
+  }
+
+  .input {
+    @apply w-full rounded-md border px-3 py-2 text-sm outline-none transition;
+    border-color: rgb(var(--border-ui));
+    background-color: rgb(var(--surface-950) / 0.86);
+    color: rgb(var(--text-strong));
+  }
+
+  .input::placeholder {
+    color: rgb(var(--text-muted) / 0.72);
+  }
+
+  .input:focus {
+    border-color: rgb(var(--signal-cyan));
+    box-shadow: 0 0 0 3px rgb(var(--signal-cyan) / 0.2);
+  }
+
+  .label {
+    @apply text-xs font-semibold uppercase tracking-wide;
+    color: rgb(var(--text-muted));
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+    background: linear-gradient(135deg, rgb(var(--signal-cyan)), rgb(var(--signal-lime)));
+    color: rgb(var(--on-accent));
+    box-shadow: 0 10px 30px rgba(38, 207, 190, 0.18);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+    border-color: rgb(var(--border-ui));
+    background-color: rgb(var(--surface-850) / 0.64);
+    color: rgb(var(--text-strong));
+  }
+
+  .btn-secondary:hover {
+    border-color: rgb(var(--signal-cyan) / 0.62);
+    background-color: rgb(var(--signal-cyan) / 0.1);
+    transform: translateY(-1px);
+  }
+
+  .table-head {
+    @apply border-b text-left text-xs font-semibold uppercase tracking-wide;
+    border-color: rgb(var(--border-ui));
+    background-color: rgb(var(--surface-850) / 0.64);
+    color: rgb(var(--text-muted));
+  }
+
+  .table-cell {
+    @apply border-b px-4 py-3 text-sm;
+    border-color: rgb(var(--border-ui) / 0.56);
+    color: rgb(var(--text-base));
+  }
+
+  .brand-mark {
+    @apply relative grid shrink-0 place-items-center overflow-hidden rounded-lg;
+    background:
+      linear-gradient(145deg, rgb(var(--surface-850)), rgb(var(--surface-950))),
+      radial-gradient(circle at 20% 10%, rgb(var(--signal-cyan) / 0.34), transparent 60%);
+    border: 1px solid rgb(var(--signal-cyan) / 0.34);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08), 0 14px 34px rgb(var(--signal-cyan) / 0.12);
+  }
+
+  .brand-mark::after {
+    content: "";
+    position: absolute;
+    top: -30%;
+    left: 0;
+    width: 42%;
+    height: 160%;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.28), transparent);
+    animation: brand-sweep 4.8s ease-in-out infinite;
+  }
+
+  .brand-mark svg {
+    @apply relative z-10 h-[76%] w-[76%];
+  }
+
+  .brand-mark-shell {
+    fill: rgb(var(--surface-900));
+    stroke: rgb(var(--signal-cyan));
+    stroke-width: 3;
+    stroke-linejoin: round;
+  }
+
+  .brand-mark-core {
+    stroke: rgb(var(--signal-lime));
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .brand-mark-node-line {
+    stroke: rgb(var(--signal-cyan));
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  .brand-mark-node {
+    fill: rgb(var(--signal-cyan));
+    animation: pulse-ring 2.7s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  .theme-toggle {
+    @apply inline-flex h-10 items-center justify-center gap-2 rounded-md border px-3 text-sm font-semibold transition;
+    border-color: rgb(var(--border-ui));
+    background-color: rgb(var(--surface-850) / 0.72);
+    color: rgb(var(--text-strong));
+  }
+
+  .theme-toggle:hover {
+    border-color: rgb(var(--signal-cyan) / 0.64);
+    transform: translateY(-1px);
+  }
+
+  .theme-toggle-icon {
+    @apply grid h-6 w-6 place-items-center rounded-full;
+    background-color: rgb(var(--signal-cyan) / 0.14);
+    color: rgb(var(--signal-cyan));
+  }
+
+  .auth-page {
+    @apply relative grid min-h-screen place-items-center px-4 py-8 sm:py-10;
+    color: rgb(var(--text-base));
+  }
+
+  .auth-theme-control {
+    @apply absolute right-4 top-4 sm:right-6 sm:top-6;
+  }
+}
+
+@layer utilities {
+  .text-strong {
+    color: rgb(var(--text-strong));
+  }
+
+  .text-muted {
+    color: rgb(var(--text-muted));
+  }
+
+  .text-body {
+    color: rgb(var(--text-base));
+  }
+
+  .animate-flow-in {
+    animation: flow-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .stagger-1 {
+    animation-delay: 80ms;
+  }
+
+  .stagger-2 {
+    animation-delay: 160ms;
+  }
+}
+
+:root.light .text-white,
+:root.light .text-slate-100,
+:root.light .text-slate-200,
+:root.light .text-slate-300 {
+  color: rgb(var(--text-strong)) !important;
+}
+
+:root.light .text-slate-400,
+:root.light .text-slate-500 {
+  color: rgb(var(--text-muted)) !important;
+}
+
+:root.light [class~="bg-white/5"],
+:root.light [class~="bg-white/[0.03]"] {
+  background-color: rgb(var(--surface-850) / 0.72) !important;
+}
+
+:root.light [class~="border-white/10"],
+:root.light [class~="border-white/5"] {
+  border-color: rgb(var(--border-ui)) !important;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    border-radius: 0.75rem;
+  }
+
+  .table-cell,
+  .table-head th {
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}

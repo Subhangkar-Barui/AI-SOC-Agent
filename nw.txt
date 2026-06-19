@@ -1,0 +1,1092 @@
+You are an expert full-stack developer, cybersecurity engineer, SOC analyst, application security engineer, and technical mentor.
+
+Build a complete professional resume-ready project named:
+
+AI-Powered SOC Dashboard with Downloadable Windows Network Monitoring Agent
+
+Main project objective:
+Create a full-stack cybersecurity monitoring platform where a user visits a React web dashboard, registers/logs in, downloads a Windows Network Monitoring Agent, installs it on their own local Windows system, pairs it with their dashboard account, and then monitors live network traffic metadata from their own home/personal/lab/authorized network. The agent sends traffic logs to the backend, the backend stores and analyzes them, and the React frontend displays live reports, alerts, devices, risk scores, and dashboard analytics for that specific user.
+
+Important architecture rule:
+The Windows Agent must not send data directly to the React frontend. The correct architecture is:
+
+Windows Agent
+→ FastAPI Backend API
+→ MongoDB Atlas Database
+→ React Frontend Dashboard
+
+Reason:
+React is only the visual interface. The backend must handle authentication, storage, analysis, alert generation, user-specific access control, and API security.
+
+Use free or student-friendly resources:
+
+* GitHub for source control
+* Render Free Web Service for FastAPI backend
+* MongoDB Atlas Free cluster for database
+* Vercel Hobby for React frontend
+* GitHub Actions for optional CI/CD
+* Free Python libraries for Windows Agent
+* Free frontend libraries
+
+Final high-level workflow:
+
+1. User visits the React website.
+2. User registers or logs in.
+3. User opens the Windows Agent page.
+4. User clicks Download Agent.
+5. User generates an Agent Pairing Key from the dashboard.
+6. User installs/runs the Windows Agent locally.
+7. Agent asks for backend URL and pairing key.
+8. Agent registers itself with the backend.
+9. Agent starts heartbeat updates.
+10. Agent discovers local network devices.
+11. Agent captures safe traffic metadata only.
+12. Agent sends metadata to FastAPI backend.
+13. Backend validates, stores, and analyzes the data.
+14. Backend generates alerts for suspicious traffic.
+15. React dashboard shows live traffic, devices, alerts, analytics, and reports.
+16. User can close alerts, filter traffic, upload CSV logs, and view security reports.
+
+Ethical and legal boundary:
+The Windows Agent must only be used on the user’s own device, personal/home/lab network, or a network where the user has explicit permission. The project must not include stealth behavior, persistence abuse, bypassing detection, password capture, cookie capture, private message capture, or packet payload spying. The agent should collect metadata only, not sensitive payload content.
+
+Metadata allowed:
+
+* Timestamp
+* Source IP
+* Destination IP
+* Protocol
+* Source port
+* Destination port
+* Packet size
+* Direction
+* Interface name
+* Hostname where available
+* MAC address where available
+* Device status
+* Risk score
+* Alert status
+
+Do not collect:
+
+* Passwords
+* Cookies
+* Browser content
+* Private messages
+* Files
+* Packet payloads
+* Keystrokes
+* Credentials
+* Personal content
+
+Important technical limitation:
+A normal Windows laptop may not see all traffic from every device on a modern switched or Wi-Fi network. The MVP should reliably monitor:
+
+* The Windows system running the agent
+* Visible LAN broadcast/multicast traffic
+* Local subnet device discovery
+* Traffic metadata from the selected network adapter
+
+For full network visibility, document future expansion options:
+
+* Router log integration
+* Syslog ingestion
+* NetFlow/sFlow
+* Raspberry Pi sensor
+* Switch port mirroring/SPAN
+* Multiple agents installed on multiple devices
+
+Technology stack:
+
+Backend:
+
+* Python
+* FastAPI
+* PyMongo
+* Pydantic
+* JWT authentication
+* bcrypt password hashing
+* python-jose
+* python-dotenv
+* python-multipart
+* Uvicorn
+* MongoDB Atlas
+
+Frontend:
+
+* React.js with Vite
+* Tailwind CSS
+* Axios
+* React Router DOM
+* Recharts
+* Responsive dark cybersecurity dashboard theme
+
+Windows Agent:
+
+* Python
+* Scapy
+* Npcap requirement for Windows packet capture
+* psutil
+* requests
+* socket
+* uuid
+* PyInstaller for executable packaging
+* Optional Tkinter or PySide6 GUI later
+
+Deployment:
+
+* Backend on Render Free
+* Frontend on Vercel Hobby
+* Database on MongoDB Atlas Free
+* Windows Agent downloadable from frontend or GitHub Releases
+
+Project folder structure:
+
+ai-soc-dashboard/
+├── backend/
+│   ├── main.py
+│   ├── database.py
+│   ├── auth.py
+│   ├── models.py
+│   ├── log_models.py
+│   ├── traffic_models.py
+│   ├── agent_models.py
+│   ├── detection.py
+│   ├── requirements.txt
+│   ├── .env.example
+│   └── README.md
+│
+├── frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   │   └── axios.js
+│   │   ├── components/
+│   │   │   ├── Sidebar.jsx
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── StatCard.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── SeverityBadge.jsx
+│   │   │   ├── StatusBadge.jsx
+│   │   │   └── AgentCard.jsx
+│   │   ├── pages/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Logs.jsx
+│   │   │   ├── AddLog.jsx
+│   │   │   ├── UploadCSV.jsx
+│   │   │   ├── Alerts.jsx
+│   │   │   ├── AgentDownload.jsx
+│   │   │   ├── ConnectedAgents.jsx
+│   │   │   ├── NetworkDevices.jsx
+│   │   │   ├── LiveTraffic.jsx
+│   │   │   ├── TrafficAnalytics.jsx
+│   │   │   └── Reports.jsx
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── package.json
+│   └── README.md
+│
+├── agent/
+│   ├── traffic_agent.py
+│   ├── discovery.py
+│   ├── api_client.py
+│   ├── detection_local.py
+│   ├── config.py
+│   ├── requirements.txt
+│   ├── build_agent.bat
+│   └── README.md
+│
+├── sample_data/
+│   └── sample_logs.csv
+│
+├── screenshots/
+│   └── .gitkeep
+│
+├── README.md
+├── .gitignore
+└── .env.example
+
+Backend requirements:
+
+1. Authentication:
+   Create APIs:
+
+* POST /register
+* POST /login
+* GET /profile
+
+Register fields:
+
+* name
+* email
+* password
+
+Login fields:
+
+* email
+* password
+
+Security:
+
+* Hash passwords with bcrypt.
+* Never store plain-text passwords.
+* Generate JWT token after login.
+* JWT must expire.
+* Protect all SOC, agent, traffic, logs, alerts, and dashboard APIs.
+* Do not return password hashes in responses.
+* Use environment variables for secrets.
+
+2. MongoDB collections:
+   Use these collections:
+
+* users
+* logs
+* alerts
+* agents
+* network_devices
+* traffic
+* reports
+
+users document:
+{
+"name": "User Name",
+"email": "[user@example.com](mailto:user@example.com)",
+"password": "hashed_password",
+"created_at": "timestamp"
+}
+
+logs document:
+{
+"timestamp": "timestamp",
+"source_ip": "192.168.1.45",
+"destination_ip": "10.0.0.8",
+"event_type": "Failed Login",
+"severity": "High",
+"message": "Multiple failed login attempts detected",
+"created_by": "[user@example.com](mailto:user@example.com)",
+"created_at": "timestamp"
+}
+
+alerts document:
+{
+"title": "Possible Port Scan Detected",
+"severity": "High",
+"source_ip": "192.168.1.45",
+"destination_ip": "10.0.0.8",
+"event_type": "Port Scan",
+"status": "Open",
+"risk_score": 80,
+"source_type": "traffic",
+"agent_id": "agent_123",
+"user_email": "[user@example.com](mailto:user@example.com)",
+"detected_at": "timestamp",
+"closed_at": null,
+"closed_by": null
+}
+
+agents document:
+{
+"agent_id": "agent_123",
+"user_email": "[user@example.com](mailto:user@example.com)",
+"device_name": "USER-PC",
+"os": "Windows",
+"agent_version": "1.0.0",
+"status": "Online",
+"pairing_key_hash": "hashed_key",
+"last_heartbeat": "timestamp",
+"created_at": "timestamp"
+}
+
+network_devices document:
+{
+"agent_id": "agent_123",
+"user_email": "[user@example.com](mailto:user@example.com)",
+"ip_address": "192.168.1.10",
+"mac_address": "AA:BB:CC:DD:EE:FF",
+"hostname": "DESKTOP-USER",
+"vendor": "Unknown",
+"status": "Online",
+"first_seen": "timestamp",
+"last_seen": "timestamp"
+}
+
+traffic document:
+{
+"agent_id": "agent_123",
+"user_email": "[user@example.com](mailto:user@example.com)",
+"timestamp": "timestamp",
+"source_ip": "192.168.1.5",
+"destination_ip": "142.250.192.46",
+"protocol": "TCP",
+"source_port": 51522,
+"destination_port": 443,
+"packet_size": 1260,
+"direction": "outbound",
+"interface_name": "Wi-Fi",
+"status": "Normal",
+"risk_score": 15,
+"created_at": "timestamp"
+}
+
+3. Log APIs:
+   Create:
+
+* POST /logs
+* GET /logs
+* POST /logs/upload-csv
+
+POST /logs:
+
+* Add one security log manually.
+* Validate all fields using Pydantic.
+* Severity must be High, Medium, or Low.
+* If severity is High, automatically create an alert.
+* Store created_by and created_at.
+
+GET /logs:
+
+* Return only the logged-in user’s logs.
+* Convert ObjectId to string.
+* Support filters:
+
+  * source_ip
+  * destination_ip
+  * severity
+  * event_type
+  * date_from
+  * date_to
+
+POST /logs/upload-csv:
+
+* Accept only CSV.
+* Required columns:
+  timestamp,source_ip,destination_ip,event_type,severity,message
+* Validate columns.
+* Validate row values.
+* Normalize severity.
+* Insert logs in bulk.
+* Create alerts for High severity logs.
+* Return logs_inserted and alerts_created.
+
+4. Agent APIs:
+   Create:
+
+* POST /agent/generate-key
+* POST /agent/register
+* POST /agent/heartbeat
+* GET /agents
+* GET /agent/{agent_id}
+* DELETE /agent/{agent_id}
+
+POST /agent/generate-key:
+
+* User must be logged in.
+* Generate a one-time pairing key.
+* Store hashed pairing key in backend.
+* Return plain pairing key only once.
+* Pairing key expires after limited time.
+* User enters this key in Windows Agent.
+
+POST /agent/register:
+
+* Windows Agent sends pairing key, device name, OS, and version.
+* Backend validates pairing key.
+* Creates agent_id.
+* Links agent to user_email.
+* Returns agent token or agent_id.
+
+POST /agent/heartbeat:
+
+* Agent sends heartbeat every 30–60 seconds.
+* Backend updates last_heartbeat.
+* Backend marks agent Online.
+* If no heartbeat for a defined period, show Offline.
+
+GET /agents:
+
+* Return only current user’s agents.
+
+DELETE /agent/{agent_id}:
+
+* User can unpair/delete their own agent.
+* Do not allow users to delete another user’s agent.
+
+5. Network device APIs:
+   Create:
+
+* POST /network/devices
+* GET /network/devices
+
+POST /network/devices:
+
+* Agent sends discovered LAN devices.
+* Validate device fields.
+* Upsert devices by agent_id + ip_address or mac_address.
+* Store first_seen and last_seen.
+* Link to user_email from agent.
+
+GET /network/devices:
+
+* User must be logged in.
+* Return only devices belonging to current user.
+* Support filters:
+
+  * agent_id
+  * status
+  * ip_address
+  * hostname
+
+6. Traffic APIs:
+   Create:
+
+* POST /traffic
+* GET /traffic
+* GET /traffic/stats
+* GET /traffic/live-summary
+
+POST /traffic:
+
+* Agent sends traffic metadata.
+* Validate all fields.
+* Link traffic to correct user through agent_id/agent token.
+* Store traffic in MongoDB.
+* Run rule-based detection.
+* If suspicious or high risk, create alert automatically.
+
+GET /traffic:
+
+* Logged-in user can view only their traffic.
+* Support filters:
+
+  * agent_id
+  * source_ip
+  * destination_ip
+  * protocol
+  * destination_port
+  * status
+  * date_from
+  * date_to
+* Return latest events first.
+* Add pagination.
+
+GET /traffic/stats:
+Return:
+{
+"total_packets": 0,
+"tcp_packets": 0,
+"udp_packets": 0,
+"icmp_packets": 0,
+"suspicious_packets": 0,
+"high_risk_packets": 0,
+"top_source_ips": [],
+"top_destination_ips": [],
+"top_ports": [],
+"protocol_distribution": []
+}
+
+GET /traffic/live-summary:
+
+* Lightweight endpoint for dashboard auto-refresh.
+* Return recent traffic count, suspicious count, latest alerts, active agents, and top ports.
+
+7. Alert APIs:
+   Create:
+
+* GET /alerts
+* PUT /alerts/{alert_id}/close
+* DELETE /alerts/{alert_id}
+
+GET /alerts:
+
+* User sees only their alerts.
+* Include log-based and traffic-based alerts.
+* Support filters:
+
+  * status
+  * severity
+  * source_type
+  * agent_id
+
+PUT /alerts/{alert_id}/close:
+
+* Validate ObjectId.
+* Check ownership.
+* Update status to Closed.
+* Add closed_at and closed_by.
+
+8. Dashboard APIs:
+   Create:
+
+* GET /dashboard/stats
+
+Return:
+{
+"total_logs": 0,
+"total_alerts": 0,
+"open_alerts": 0,
+"closed_alerts": 0,
+"high_severity": 0,
+"medium_severity": 0,
+"low_severity": 0,
+"total_agents": 0,
+"online_agents": 0,
+"offline_agents": 0,
+"known_devices": 0,
+"total_packets": 0,
+"suspicious_packets": 0,
+"high_risk_packets": 0
+}
+
+9. Detection logic:
+   Create detection.py.
+
+Implement rule-based detection first.
+
+Rules:
+
+* High severity log creates alert.
+* New unknown device discovered creates Low/Medium alert.
+* Same source IP connecting to more than 10 unique destination ports in 60 seconds creates Possible Port Scan alert.
+* Repeated connection attempts to sensitive ports creates alert.
+* Sensitive ports:
+
+  * 22 SSH
+  * 23 Telnet
+  * 445 SMB
+  * 3389 RDP
+  * 3306 MySQL
+  * 5432 PostgreSQL
+* Unusual destination port creates suspicious status.
+* Very high packet rate creates suspicious status.
+* Large outbound transfer creates suspicious status.
+* Traffic to custom blocked IP list creates High alert.
+
+Risk score:
+
+* 0–30 Normal
+* 31–60 Suspicious
+* 61–100 High Risk
+
+10. Windows Agent requirements:
+    Create a local Windows Agent.
+
+Agent folder:
+agent/
+├── traffic_agent.py
+├── discovery.py
+├── api_client.py
+├── detection_local.py
+├── config.py
+├── requirements.txt
+├── build_agent.bat
+└── README.md
+
+Agent behavior:
+
+1. Show consent notice.
+2. Ask for backend URL.
+3. Ask for pairing key.
+4. Register with backend.
+5. Detect available network interfaces.
+6. Ask user to select interface.
+7. Discover devices on local subnet.
+8. Capture traffic metadata only.
+9. Send device data to POST /network/devices.
+10. Send traffic data to POST /traffic.
+11. Send heartbeat to POST /agent/heartbeat.
+12. Run visibly, not stealthily.
+13. Allow stop/pause monitoring.
+14. Do not capture payloads.
+15. Do not collect sensitive content.
+
+Agent libraries:
+
+* scapy
+* psutil
+* requests
+* socket
+* uuid
+* platform
+* datetime
+
+Windows requirement:
+
+* User may need Npcap installed.
+* User may need administrator privileges for packet capture.
+
+Agent packaging:
+Use PyInstaller.
+
+build_agent.bat should run:
+pyinstaller --onefile --name SOC-Windows-Agent traffic_agent.py
+
+Optional later:
+
+* Add Tkinter or PySide6 GUI.
+* Add system tray icon.
+* Add Windows installer using Inno Setup.
+* Add auto-update later, but not in MVP.
+
+11. Frontend requirements:
+    Build React frontend.
+
+Pages:
+
+* Login
+* Register
+* Dashboard
+* Logs
+* Add Log
+* Upload CSV
+* Alerts
+* Agent Download
+* Connected Agents
+* Network Devices
+* Live Traffic
+* Traffic Analytics
+* Reports
+
+Authentication:
+
+* Store JWT token after login.
+* Use ProtectedRoute.
+* Redirect unauthenticated users to Login.
+* Add logout button.
+* Axios must attach Authorization header.
+
+API base URL:
+Use environment variable:
+VITE_API_BASE_URL
+
+Agent Download page:
+
+* Show project explanation.
+* Show Download Windows Agent button.
+* Show Generate Pairing Key button.
+* Show backend URL to enter in agent.
+* Show setup steps:
+
+  1. Download agent
+  2. Install/run agent
+  3. Enter pairing key
+  4. Select network adapter
+  5. Start monitoring
+* Show warning:
+  Use only on your own or authorized network.
+* Show connected agents table.
+
+Connected Agents page:
+
+* Agent name
+* OS
+* Version
+* Status
+* Last heartbeat
+* Created at
+* Delete/unpair button
+
+Network Devices page:
+
+* IP address
+* MAC address
+* Hostname
+* Vendor
+* Status
+* First seen
+* Last seen
+* Agent
+* Highlight newly discovered devices.
+
+Live Traffic page:
+
+* Table auto-refresh every 5 seconds.
+* Columns:
+
+  * timestamp
+  * source_ip
+  * destination_ip
+  * protocol
+  * source_port
+  * destination_port
+  * packet_size
+  * direction
+  * status
+  * risk_score
+* Filters:
+
+  * protocol
+  * source IP
+  * destination IP
+  * destination port
+  * status
+  * agent
+
+Traffic Analytics page:
+
+* Total packets
+* Suspicious packets
+* High risk packets
+* Protocol distribution chart
+* Top source IPs chart
+* Top destination IPs chart
+* Top ports chart
+* Traffic over time chart
+
+Dashboard page:
+Show cards:
+
+* Total Logs
+* Total Alerts
+* Open Alerts
+* Closed Alerts
+* Connected Agents
+* Online Agents
+* Known Devices
+* Total Packets
+* Suspicious Packets
+* High Risk Packets
+
+Charts:
+
+* Severity distribution
+* Alert status
+* Protocol distribution
+* Top destination ports
+* Traffic over time
+
+Logs page:
+
+* Logs table
+* Severity filter
+* Source IP filter
+* Event type filter
+* Reset button
+
+Upload CSV page:
+
+* File upload component.
+* Accept only .csv.
+* Show required CSV format.
+* Show upload result.
+
+Alerts page:
+
+* Alerts table.
+* Close alert button only for Open alerts.
+* Filters for status, severity, source type.
+
+Reports page:
+
+* Generate basic security report from dashboard stats.
+* Show summary:
+
+  * Number of alerts
+  * Suspicious traffic
+  * Top risky IPs
+  * Recently discovered devices
+  * Recommendations
+* Optional: export report as PDF later.
+
+UI style:
+
+* Dark SOC theme.
+* Professional dashboard layout.
+* Sidebar navigation.
+* Clean cards.
+* Responsive.
+* Use Tailwind.
+* Use Recharts.
+* Keep it resume/demo friendly.
+
+12. Deployment:
+    Use free deployment.
+
+Backend on Render:
+
+* Build command:
+  pip install -r requirements.txt
+* Start command:
+  uvicorn main:app --host 0.0.0.0 --port $PORT
+* Environment variables:
+  MONGO_URL
+  DB_NAME
+  SECRET_KEY
+  AGENT_SECRET
+  FRONTEND_URL
+
+Database on MongoDB Atlas:
+
+* Use free cluster.
+* Create database user.
+* Add network access rule.
+* Store connection string in Render environment variables.
+
+Frontend on Vercel:
+
+* Build command:
+  npm run build
+* Output directory:
+  dist
+* Environment variable:
+  VITE_API_BASE_URL=https://your-render-backend.onrender.com
+
+Windows Agent:
+
+* Host downloadable .exe through:
+
+  * GitHub Releases
+  * or static public link
+  * or frontend download button pointing to release asset
+* Do not host real secrets inside agent binary.
+* User should pair agent using generated key.
+
+13. Security requirements:
+    Follow OWASP Top 10-style protections.
+
+Access control:
+
+* Every user sees only their own logs, alerts, traffic, devices, and agents.
+* Check ownership before closing/deleting alerts or agents.
+* Protect all sensitive routes.
+
+Cryptography:
+
+* bcrypt for passwords.
+* JWT expiry.
+* Secrets in environment variables only.
+* Never commit .env.
+
+Injection prevention:
+
+* Pydantic validation.
+* Allowlisted filter fields.
+* Validate ObjectId.
+* Validate CSV.
+* Do not use eval or exec.
+* Do not pass raw user objects directly into MongoDB queries.
+
+Security misconfiguration:
+
+* Restrict CORS to Vercel frontend in production.
+* Do not use debug mode in production.
+* Do not expose stack traces to frontend.
+* Use .env.example.
+
+Authentication:
+
+* Secure login.
+* Token expiry.
+* Logout support.
+* No password hash exposure.
+
+File upload:
+
+* Accept only CSV.
+* Do not execute uploaded files.
+* Validate content server-side.
+
+SSRF:
+
+* Do not allow backend to fetch arbitrary URLs.
+* If threat intelligence APIs are added later, use allowlisted domains only.
+
+React security:
+
+* Do not use dangerouslySetInnerHTML.
+* Do not expose backend secrets.
+* Render user data safely.
+
+Agent safety:
+
+* Visible consent screen.
+* No stealth mode.
+* No persistence abuse.
+* No credential collection.
+* No payload capture.
+* Metadata only.
+* Pause/stop option.
+* Authorized network only warning.
+
+14. GitHub repository requirements:
+    Include:
+
+* Clean README
+* .gitignore
+* .env.example
+* sample_logs.csv
+* screenshots folder
+* backend setup
+* frontend setup
+* agent setup
+* deployment guide
+* architecture diagram
+* API documentation
+* security checklist
+* limitations
+* future enhancements
+
+.gitignore:
+venv/
+.venv/
+**pycache**/
+.env
+*.pyc
+node_modules/
+dist/
+build/
+*.spec
+agent/dist/
+agent/build/
+
+README sections:
+
+1. Project Title
+
+2. Overview
+
+3. Problem Statement
+
+4. Final Workflow
+
+5. Architecture Diagram
+
+6. Features
+
+7. Tech Stack
+
+8. Folder Structure
+
+9. Backend Setup
+
+10. Frontend Setup
+
+11. Windows Agent Setup
+
+12. Deployment Guide
+
+13. API Endpoints
+
+14. Sample CSV Format
+
+15. Security and Privacy Notice
+
+16. OWASP Top 10 Mitigation
+
+17. Limitations
+
+18. Future Enhancements
+
+19. Screenshots
+
+20. Resume Description
+
+21. Resume positioning:
+    Project title:
+    AI-Powered SOC Dashboard with Downloadable Windows Network Monitoring Agent
+
+Resume bullets:
+
+* Developed a full-stack SOC monitoring platform with React, FastAPI, MongoDB Atlas, and JWT authentication for secure cybersecurity log and traffic analysis.
+* Built a downloadable Windows Network Monitoring Agent that captures authorized local network metadata and sends it to the backend for live analysis.
+* Implemented agent pairing, heartbeat tracking, LAN device discovery, live traffic monitoring, rule-based suspicious activity detection, and automated alert generation.
+* Created dashboard analytics for logs, alerts, connected agents, discovered devices, traffic patterns, risk scores, and alert lifecycle management.
+* Deployed the frontend on Vercel, backend on Render, and database on MongoDB Atlas using free-tier resources for a portfolio-ready demo.
+* Followed OWASP Top 10 security practices and privacy-first design by enforcing authentication, user-level access control, input validation, safe file upload, and metadata-only monitoring.
+
+16. Development order:
+    Build the project in this exact order:
+
+Phase 1:
+
+* Existing backend auth
+* Logs
+* Alerts
+* Dashboard stats
+* CSV upload
+
+Phase 2:
+
+* Add agent backend models and APIs
+* Generate pairing key
+* Register agent
+* Heartbeat
+* Connected agents
+
+Phase 3:
+
+* Add traffic APIs
+* POST /traffic
+* GET /traffic
+* GET /traffic/stats
+* GET /traffic/live-summary
+
+Phase 4:
+
+* Add network device APIs
+* Device discovery ingestion
+* Network devices dashboard
+
+Phase 5:
+
+* Add rule-based detection
+* Port scan detection
+* Sensitive port detection
+* High packet rate detection
+* Risk scoring
+* Auto alerts
+
+Phase 6:
+
+* Build React frontend
+* Login/register
+* Dashboard
+* Logs
+* Alerts
+* Agent Download
+* Connected Agents
+* Live Traffic
+* Network Devices
+* Traffic Analytics
+* Reports
+
+Phase 7:
+
+* Build Windows Agent
+* Pairing flow
+* Interface selection
+* Device discovery
+* Traffic metadata capture
+* Backend submission
+* Heartbeat
+
+Phase 8:
+
+* Package Windows Agent using PyInstaller
+* Provide download through GitHub Releases
+* Connect download link to React page
+
+Phase 9:
+
+* Deploy backend on Render
+* Deploy frontend on Vercel
+* Connect MongoDB Atlas
+* Test end-to-end workflow
+
+Phase 10:
+
+* Add README, screenshots, resume bullets, architecture diagram, and final documentation
+
+Phase 11 future:
+
+* AI anomaly detection using Isolation Forest
+* ML-based risk scoring
+* Router log integration
+* Raspberry Pi sensor mode
+* Android viewer app
+* Electron/Tauri desktop app
+* Email/Telegram alert notifications
+* PDF report export
+
+Build the project professionally but keep the implementation beginner-understandable. Prioritize working features, secure architecture, ethical use, free deployment, clean code, and resume impact.

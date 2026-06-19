@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: ai-soc-dashboard-api
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.14.3
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: ai_soc_dashboard
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "120"
+      - key: FRONTEND_ORIGINS
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: BLOCKED_IPS
+        sync: false
