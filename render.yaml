@@ -25,8 +25,9 @@ services:
       - key: BLOCKED_IPS
         sync: false
 
-  - type: static
+  - type: web
     name: ai-soc-dashboard-frontend
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
