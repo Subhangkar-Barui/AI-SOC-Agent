@@ -9,7 +9,7 @@ services:
     healthCheckPath: /
     envVars:
       - key: PYTHON_VERSION
-        value: 3.14.3
+        value: "3.11.12"
       - key: MONGO_URL
         sync: false
       - key: DB_NAME
@@ -24,3 +24,32 @@ services:
         sync: false
       - key: BLOCKED_IPS
         sync: false
+
+  - type: web
+    name: ai-soc-dashboard-frontend
+    runtime: static
+    rootDir: frontend
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
+      - key: VITE_AGENT_DOWNLOAD_URL
+        sync: false
+      - key: NODE_VERSION
+        value: "20.18.3"
