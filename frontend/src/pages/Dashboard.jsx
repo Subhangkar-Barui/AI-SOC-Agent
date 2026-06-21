@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { AlertCircle, AlertTriangle, BarChart3, CheckCircle2, Database, Monitor, Network, RadioTower, ShieldAlert, ShieldCheck, Sparkles } from "lucide-react";
+import { AlertCircle, AlertTriangle, BarChart3, CheckCircle2, Database, Monitor, Network, RadioTower, ShieldAlert, ShieldCheck } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import api from "../api/axios";
 import StatCard from "../components/StatCard";
@@ -29,10 +29,8 @@ export default function Dashboard() {
   const [trafficStats, setTrafficStats] = useState({ protocol_distribution: [], top_ports: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [seeding, setSeeding] = useState(false);
 
-  const fetchDashboard = () => {
-    setLoading(true);
+  useEffect(() => {
     Promise.all([api.get("/dashboard/stats"), api.get("/traffic/stats")])
       .then(([statsResponse, trafficResponse]) => {
         setStats({ ...defaultStats, ...statsResponse.data });
@@ -40,24 +38,7 @@ export default function Dashboard() {
       })
       .catch(() => setError("Unable to load dashboard stats."))
       .finally(() => setLoading(false));
-  };
-
-  useEffect(() => { fetchDashboard(); }, []);
-
-  const isEmpty = !loading && stats.total_logs === 0 && stats.total_alerts === 0 && stats.total_packets === 0;
-
-  const handleSeedDemo = async () => {
-    setSeeding(true);
-    setError("");
-    try {
-      await api.post("/seed-demo");
-      fetchDashboard();
-    } catch (err) {
-      setError(err.response?.data?.detail || "Failed to load sample data.");
-    } finally {
-      setSeeding(false);
-    }
-  };
+  }, []);
 
   const severityData = useMemo(() => [
     { name: "High", value: stats.high_severity },
@@ -80,18 +61,6 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       {error && <div className="rounded-md border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-100">{error}</div>}
-
-      {isEmpty && (
-        <div className="panel p-5 text-center">
-          <Sparkles className="mx-auto mb-3 text-signal-cyan" size={36} />
-          <h3 className="text-lg font-semibold text-white">Your dashboard is empty</h3>
-          <p className="mt-1 text-sm text-slate-400">Load sample security data to explore the dashboard, or connect the Windows agent to monitor your own network.</p>
-          <button className="btn-primary mt-4" onClick={handleSeedDemo} disabled={seeding}>
-            <Sparkles size={18} aria-hidden="true" />
-            {seeding ? "Loading..." : "Load Sample Data"}
-          </button>
-        </div>
-      )}
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Total Logs" value={loading ? "..." : stats.total_logs} icon={Database} />
