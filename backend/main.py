@@ -212,6 +212,17 @@ def login(user: UserLogin):
     return {"message": "Login successful", "access_token": token, "token_type": "bearer"}
 
 
+@app.post("/seed-demo")
+def seed_demo(current_user: dict = Depends(get_current_user)):
+    email = current_user["email"]
+    existing_logs = logs_collection.count_documents(user_log_query(email))
+    existing_traffic = traffic_collection.count_documents({"user_email": email})
+    if existing_logs > 0 or existing_traffic > 0:
+        raise HTTPException(status_code=400, detail="Account already has data. Demo seeding skipped.")
+    result = seed_demo_data(email)
+    return {"message": "Demo data seeded successfully", **result}
+
+
 @app.get("/profile")
 def profile(current_user: dict = Depends(get_current_user)):
     return {"name": current_user["name"], "email": current_user["email"]}
