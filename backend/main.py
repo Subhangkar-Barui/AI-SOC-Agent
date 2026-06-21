@@ -30,6 +30,7 @@ from database import (
 from detection import build_new_device_alert, build_traffic_alert, one_minute_ago, score_traffic
 from log_models import SecurityLog
 from models import UserLogin, UserRegister
+from seed_demo_data import seed_demo_data
 from traffic_models import TrafficEvent
 
 app = FastAPI(title="AI SOC Dashboard Backend")
@@ -192,6 +193,11 @@ def register(user: UserRegister):
         users_collection.insert_one(new_user)
     except DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Email already registered")
+
+    try:
+        seed_demo_data(user.email)
+    except Exception:
+        pass  # Don't fail registration if seeding fails
 
     return {"message": "User registered successfully"}
 
